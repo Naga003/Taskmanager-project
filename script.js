@@ -1,99 +1,138 @@
+// Get all the important elements from the HTML file
 const taskInput = document.getElementById("taskInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
 const taskList = document.getElementById("taskList");
 const progressBar = document.getElementById("progressBar");
 const progressText = document.getElementById("progressText");
 
-// Load tasks from localStorage or use empty array
+// Load tasks from the browser's local storage.
+// If there are no tasks stored, start with an empty array.
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-function saveTasks() {
+// This function saves the current tasks array to local storage.
+const saveTasks = () => {
   localStorage.setItem("tasks", JSON.stringify(tasks));
-}
+};
 
-function renderTasks() {
+// This is the main function that renders all tasks to the screen.
+const renderTasks = () => {
+  // Clear the existing list to avoid duplicates
   taskList.innerHTML = "";
 
+  // Loop through each task in our array and create an element for it
   tasks.forEach((task, index) => {
-    const li = document.createElement("li");
+    const listItem = document.createElement("li");
 
-    // Task text
-    const span = document.createElement("span");
-    span.textContent = task.text;
-    span.classList.add("task-content");
-    if (task.completed) span.classList.add("completed");
-    span.addEventListener("click", () => toggleTask(index));
+    // Create a custom checkbox for marking tasks as complete
+    const completionCheckbox = document.createElement("input");
+    completionCheckbox.type = "checkbox";
+    completionCheckbox.checked = task.completed;
+    completionCheckbox.classList.add("task-checkbox");
+    completionCheckbox.addEventListener("change", () => toggleTask(index));
 
-    // Action buttons
-    const btnContainer = document.createElement("div");
-    btnContainer.classList.add("action-btns");
+    // Create the span for the task's text
+    const taskContent = document.createElement("span");
+    taskContent.textContent = task.text;
+    taskContent.classList.add("task-content");
+    // Add a class for styling if the task is completed
+    if (task.completed) {
+      taskContent.classList.add("completed");
+    }
 
+    // Container for the action buttons (edit and delete)
+    const buttonContainer = document.createElement("div");
+    buttonContainer.classList.add("action-btns");
+
+    // Create the edit button
     const editBtn = document.createElement("button");
     editBtn.textContent = "✏️";
     editBtn.classList.add("edit-btn");
     editBtn.addEventListener("click", () => editTask(index));
 
+    // Create the delete button
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "❌";
     deleteBtn.classList.add("delete-btn");
     deleteBtn.addEventListener("click", () => deleteTask(index));
 
-    btnContainer.appendChild(editBtn);
-    btnContainer.appendChild(deleteBtn);
+    // Add buttons to their container
+    buttonContainer.appendChild(editBtn);
+    buttonContainer.appendChild(deleteBtn);
 
-    li.appendChild(span);
-    li.appendChild(btnContainer);
-    taskList.appendChild(li);
+    // Add all created elements to the list item
+    listItem.appendChild(completionCheckbox);
+    listItem.appendChild(taskContent);
+    listItem.appendChild(buttonContainer);
+
+    // Finally, add the list item to the main task list
+    taskList.appendChild(listItem);
   });
 
+  // Update the progress bar after rendering the tasks
   updateProgress();
-}
+};
 
-function addTask() {
+// Function to add a new task to the list
+const addTask = () => {
   const text = taskInput.value.trim();
-  if (text === "") return;
+  // Don't add a task if the input is empty
+  if (text === "") {
+    return;
+  }
 
+  // Push the new task object to our array
   tasks.push({ text, completed: false });
+  // Save and re-render the list
   saveTasks();
   renderTasks();
+  // Clear the input field
   taskInput.value = "";
-}
+};
 
-function toggleTask(index) {
+// Function to toggle a task's completion status
+const toggleTask = (index) => {
   tasks[index].completed = !tasks[index].completed;
   saveTasks();
   renderTasks();
-}
+};
 
-function editTask(index) {
+// Function to edit an existing task's text
+const editTask = (index) => {
   const newText = prompt("Edit your task:", tasks[index].text);
   if (newText !== null && newText.trim() !== "") {
     tasks[index].text = newText.trim();
     saveTasks();
     renderTasks();
   }
-}
+};
 
-function deleteTask(index) {
+// Function to delete a task from the list
+const deleteTask = (index) => {
   tasks.splice(index, 1);
   saveTasks();
   renderTasks();
-}
+};
 
-function updateProgress() {
+// Function to calculate and update the progress bar
+const updateProgress = () => {
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
+  // Handle the case where there are no tasks to prevent division by zero
   const percentage = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
+  // Update the width of the progress bar and the text
   progressBar.style.width = percentage + "%";
   progressText.textContent = `${percentage}% Completed`;
-}
+};
 
-// Event Listeners
+// Event listeners to handle user actions
 addTaskBtn.addEventListener("click", addTask);
 taskInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") addTask();
+  // Allow users to press "Enter" to add a task
+  if (e.key === "Enter") {
+    addTask();
+  }
 });
 
-// Initial render
+// Initial call to render the tasks when the page loads
 renderTasks();
