@@ -1,5 +1,4 @@
-# Taskmanager-project
-# Task Manager Pro 📝
+# Task Manager Project 📝
 
 A modern, clean, and professional *Task Manager* with a live *progress tracker*.  
 Built with *HTML, CSS, and JavaScript (Local Storage)*, this app lets you manage your tasks efficiently.
