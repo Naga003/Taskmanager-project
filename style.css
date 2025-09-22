@@ -1,4 +1,4 @@
-/* General Styling */
+/* General page styling to create a clean, modern look */
 body {
   font-family: "Segoe UI", sans-serif;
   background: linear-gradient(to right, #74ebd5, #9face6);
@@ -9,6 +9,7 @@ body {
   margin: 0;
 }
 
+/* Main container for the app, adding a nice shadow and rounded corners */
 .app-container {
   background: white;
   width: 400px;
@@ -23,7 +24,7 @@ h1 {
   color: #333;
 }
 
-/* Task Input */
+/* Style for the input field and add button */
 .task-input {
   display: flex;
   gap: 10px;
@@ -58,7 +59,7 @@ h1 {
   background: #574bff;
 }
 
-/* Task List */
+/* Styling for the task list and individual tasks */
 .task-list {
   list-style: none;
   padding: 0;
@@ -81,17 +82,47 @@ h1 {
   transform: scale(1.02);
 }
 
+/* The actual text of the task */
 .task-content {
   flex: 1;
   cursor: pointer;
 }
 
+/* Styling for completed tasks */
 .completed {
   text-decoration: line-through;
   color: gray;
 }
 
-/* Buttons */
+/* Custom styling for the tick mark checkbox */
+.task-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #999;
+  border-radius: 4px;
+  margin-right: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.task-checkbox:checked {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.task-checkbox:checked::before {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 16px;
+}
+
+/* Styling for the edit and delete buttons */
 .action-btns {
   display: flex;
   gap: 6px;
@@ -123,7 +154,7 @@ h1 {
   background: #d93636;
 }
 
-/* Progress Section */
+/* Styling for the progress section at the bottom */
 .progress-section {
   margin-top: 15px;
 }
